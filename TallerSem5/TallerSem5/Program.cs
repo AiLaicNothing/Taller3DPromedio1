@@ -10,6 +10,8 @@ namespace TallerSem5
     {
         static void Main(string[] args)
         {
+            Menu menu = new Menu();
+            menu.Execute();
         }
     }
 }
