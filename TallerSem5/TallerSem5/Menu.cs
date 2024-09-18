@@ -10,10 +10,13 @@ namespace TallerSem5
     {
         private List<Player> player;
         private List<Ability> abilities;
+        private List<Items> items;
         private List<Enemy> enemys;
         public Menu()
         {
             player = new List<Player>();
+            abilities = new List<Ability>();    
+            items = new List<Items>();
             enemys = new List<Enemy>();
         }
 
@@ -103,6 +106,8 @@ namespace TallerSem5
                 mana = float.Parse(Console.ReadLine());
                 Console.WriteLine("Escribe tus puntos de daño");
                 damage = float.Parse(Console.ReadLine());
+                AddAbility();
+                AddItems();
                 Console.ReadKey();
                 Console.Clear();
 
@@ -138,6 +143,38 @@ namespace TallerSem5
             }
         }
 
+        public void AddAbility()
+        {
+            FireBall fireBall = new FireBall();
+            abilities.Add(fireBall);
+        }
+        public void ShowAbility()
+        {
+            int code = -1;
+            foreach (Ability ability in abilities)
+            {
+                code++;
+                Console.WriteLine($"{code}. {ability.GetInfo()}");
+            }
+        }
+        public void AddItems()
+        {
+            HealPotion healPotion = new HealPotion();
+            items.Add(healPotion);
+            ManaPotion manaPotion = new ManaPotion();
+            items.Add(manaPotion);
+        }
+
+        public void ShowItem()
+        {
+            int code = -1;
+            foreach(Items items in items)
+            {
+                code++;
+                Console.WriteLine($"{code}. {items.GetInfo()}");
+            }
+        }
+
         public void Combat()
         {
             Console.WriteLine("Te encuentras con enemigos");
@@ -152,7 +189,7 @@ namespace TallerSem5
                     int enemySelect;
                     //Show actions
                     Console.Clear();
-                    Console.WriteLine("Enemigos");
+                    Console.WriteLine("[Enemigos]");
                     ShowEnemyList();
                     Console.WriteLine();
                     Console.WriteLine($"Jugador: {player.ElementAt(0).GetInfo()}");
@@ -177,51 +214,87 @@ namespace TallerSem5
                             else if (enemys.ElementAt(enemySelect).hp <= 0)
                             {
                                 Console.WriteLine($"Mataste a {enemys.ElementAt(enemySelect).name}");
+                            }
+                            
+
+                            if(enemys.ElementAt(enemySelect).hp < 0)
+                            {
                                 enemys.RemoveAt(enemySelect);
                             }
 
                             playerTurn = false;
                             enemyTurn = true;
                             break;
+
                         case "2":
                             //Seleccionar habilidad 
+                            Console.WriteLine("[Habilidades]");
+                            ShowAbility();
+                            Console.WriteLine("Selecciona la habilidad");
+                            int ability = int.Parse(Console.ReadLine());
+                            switch (ability)
+                            {
+                                case 0:
+                                    Console.WriteLine($"Usaste {abilities.ElementAt(0).Name}");
+                                    break;  
+                            }
                             //Seleccion del enemigo
                             Console.WriteLine("Selecciona al enemigo");
                             enemySelect = int.Parse(Console.ReadLine());
-                            //cambiar variable al daño de habilidad
-                            enemys.ElementAt(enemySelect).GetDamaged(2);
+                            enemys.ElementAt(enemySelect).GetDamaged(abilities.ElementAt(ability).AbilityAttack());
+                            Console.WriteLine($"Le inflingiste {abilities.ElementAt(0).AbilityAttack()} de daño a {enemys.ElementAt(enemySelect).name}");
+                            if (enemys.ElementAt(enemySelect).hp > 0)
+                            {
+                                Console.WriteLine($"Le queda {enemys.ElementAt(enemySelect).hp} de vida");
+                                Console.ReadKey();
+                            }
+                            else if (enemys.ElementAt(enemySelect).hp <= 0)
+                            {
+                                Console.WriteLine($"Mataste a {enemys.ElementAt(enemySelect).name}");
+                            }
+                            Console.ReadLine();
+
                             playerTurn = false;
                             enemyTurn = true;
                             break;
+
                         case "3":
                             //Usar item
+                            Console.WriteLine("[Items]");
+                            ShowItem();
+                            int item = int.Parse(Console.ReadLine());
+                            switch (item)
+                            {
+                                case 0:
+                                    Console.WriteLine($"Usaste {items.ElementAt(0).Name}");
+                                    Console.WriteLine($"Recuperaste {items.ElementAt(0).RecoveryAmmount} de vida");
+                                    Console.ReadKey();
+                                    break;
+
+                                case 1:
+                                    Console.WriteLine($"Usaste {items.ElementAt(1).Name}");
+                                    Console.WriteLine($"Recuperaste {items.ElementAt(1).RecoveryAmmount} de mana");
+                                    Console.ReadKey();
+                                    break;
+                            }
+
                             break;
                     }
                 }
+
                 while (enemyTurn)
                 {
                     Console.Clear();
+
                     if (enemys.Count > 0)
                     {
                         bool randomize = true;
                         int randEnemy;
                         int enemyList = enemys.Count;
 
-                        while (randomize)
-                        {
-                            Random randomizer = new Random();
-                            randEnemy = randomizer.Next(enemyList);
-                        }
+                        Random randomizer = new Random();
+                        randEnemy = randomizer.Next(enemyList);
 
-
-                        if (enemys.ElementAt(randEnemy).hp <= 0) 
-                        {
-                            randomize = true ;
-                        }
-                        else
-                        {
-                            randomize = false ;
-                        }
 
                         Console.WriteLine("Turno del enemigo");
                         Console.WriteLine($"El enemigo {enemys.ElementAt(randEnemy).name} ataca");
@@ -233,11 +306,21 @@ namespace TallerSem5
                         playerTurn = true;
                         enemyTurn = false;
                     }
-                    else if(enemys.Count == 0)
+                    int enemydead = 0;
+                    foreach (Enemy enemy in enemys)
+                    {
+                        if (enemy.hp <= 0)
+                        {
+                            enemydead++;
+                        }
+                    }
+                    if (enemydead == enemys.Count())
                     {
                         Console.Clear();
                         Console.WriteLine("Mataste a todos tus enemigos");
                         Console.WriteLine("Ganaste el combate");
+                        Console.ReadKey();
+                        return;
                     }
                 }
 

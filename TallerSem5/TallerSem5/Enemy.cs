@@ -12,6 +12,8 @@ namespace TallerSem5
         public float hp;
         public float damage;
 
+        public bool isdead;
+
         public Enemy(string name, float hp, float damage)
         {
             this.name = name;
@@ -23,6 +25,7 @@ namespace TallerSem5
         {
             return $"{name}, tiene {hp} puntos de vida y {damage} puntos de daño ";
         }
+
         public virtual float GetDamaged(float playerDamage)
         {
             return hp -=playerDamage;

@@ -22,7 +22,7 @@ namespace TallerSem5
 
         public override float AbilityAttack()
         {
-            return -damage;
+            return damage;
         }
     }
 }

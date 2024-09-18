@@ -46,6 +46,9 @@
     <Compile Include="Ability.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="FireBall.cs" />
+    <Compile Include="HealPotion.cs" />
+    <Compile Include="Items.cs" />
+    <Compile Include="ManaPotion.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
