@@ -12,8 +12,6 @@ namespace TallerSem5
         public float hp;
         public float damage;
 
-        public bool isdead;
-
         public Enemy(string name, float hp, float damage)
         {
             this.name = name;
